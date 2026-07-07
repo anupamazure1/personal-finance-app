@@ -1,0 +1,54 @@
+## Rider
+.idea/
+*.sln.iml
+
+## Visual Studio Code
+.vscode/
+*.code-workspace
+
+## Visual Studio
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.TemporaryItems
+
+## dotnet
+.dotnet/
+
+## Dependencies
+packages/
+node_modules/
+
+## Environment
+.env
+.env.local
+appsettings.local.json
+
+## Database
+*.db
+*.sqlite
+
+## Logs
+logs/
+*.log
+
+## OS
+.DS_Store
+Thumbs.db
+
+## Build
+dist/
+build/
+
+## Uploads
+uploads/
+statements/
+
+## IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~

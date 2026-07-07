@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: personalfinance_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: PersonalFinance
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - personalfinance_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  api:
+    build:
+      context: ./backend/PersonalFinance.Api
+      dockerfile: Dockerfile
+    container_name: personalfinance_api
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=mysql;Database=PersonalFinance;User=appuser;Password=apppassword;"
+      ASPNETCORE_URLS: "http://0.0.0.0:5000"
+      ASPNETCORE_ENVIRONMENT: Production
+    ports:
+      - "5000:5000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - personalfinance_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: personalfinance_frontend
+    environment:
+      VITE_API_URL: "http://localhost:5000"
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+    networks:
+      - personalfinance_network
+
+volumes:
+  mysql_data:
+
+networks:
+  personalfinance_network:
+    driver: bridge
